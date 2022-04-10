@@ -3,7 +3,7 @@
 
 ##### TTK is a ***Universal*** Timing Attack Initiator which also adds up as a ***Password Brute-Forcing/Fuzzing*** tool.
 
-Poorly written code in the back-end may sometime can create a delay in response based on certain condition.
+Poorly written code in the back-end may sometime can create a delay in response based on certain conditions.
 **TTK** hunts for such scenarios and compares the resonse times to figure out possible users present in the application.
 
 Furthermore upon finding a valid username, **TTK** can also attemp to guess the password of the user by launching a brute-force attack. 
@@ -74,14 +74,54 @@ $ ./uninstall.sh
 
  - Supports both, Basic form POST data as well as JSON type data
  
- - Is colourful. Provides coloured event-based visual responses
+ - Is colorful. Provides colored event-based visual responses
 
  - Supports passing cookies with the request when required
 
+ - Comes with an installer and an un-installer
 
+### LEGEND/Color schemes :-
+ - BLUE	  -->  INFORMATIONAL STATEMENTS
+ 
+ - RED    -->  ERRORS / BAD NEWS :(
+ 
+ - GREEN  -->  GOOD NEWS ^_^
 
+ - GRAY   -->  FALSE RESULTS
 
+ - YELLOW -->  PROMPTS REQUIRING USER INPUT
 
+### Usage :-
+```sh
+$ ttk [--option(s)] [target]
+```
+ ![help-icon](https://github.com/7Ragnarok7/The-Time-Keeper/blob/main/image-src/help.png?raw=true)
+- By default, the tool will run in timing-attack mode.
+- Use the -h flag to display the help menu
+- Use the -u flag to provide the target url/api endpoint where the post requests are sent. Ex: -u https://abcd.com/api/login
+- Use the -d flag to provide the POST data. Ex: -d "username=7ragnarok7&password=abcd"
+- Use the -j flag when the data type will be of JSON type. Ex: -j -d -d '{"username": "anurag", "password": "abcd"}'
+- IMPORTANT: When the data will be of JSON type, both the keys and values must be provided as STRINGS for the tool to parse it correctly.
+- Submitting JSON DATA properly: -d ~~'{username: "anurag", password: "a"}'~~ (WRONG), -d '{"username": "anurag", "password": "abcd"}' (CORRECT)
+- Use the -w flag to provide a wordlist file to the tool. Ex: -w wordlist.txt
+- Use the -c flag to pass cookies with the requests when required. Ex: -c "Name1=Value1;Name2=Value2"  
+- Use the -b flag to launch the tool in brute-force / fuzzing mode
+- Use the -e flag to provide an error message which will be used to detect changes in the response. Ex: -e "Invalid"
+- The -e flag is a mandatory option required to be provided while using the tool in brute-force mode
+- Use the -s flag to run the tool in silent mode. Only final outputs / password matches will be printed.
+
+### Disclaimer :-
+ - This tool is made for educational & research purpose only. Use it with/on systems or networks you own or have permission from the owner. I shall not be held responsible for whatsoever you do with this tool.
+
+### To Do :-
+ - [x] ADD COLORS TO THE REST OF THE OUTPUT TO PROVIDE EVENT-BASED VISUAL RESPONSES.
+ 
+ - [x] TEST AND ADD SUPPORT FOR TERMUX
+ 
+ - [X] ADD BRUTE-FORCING MODE 
+ 
+ - [ ] ADD INTEGRATION OF TWILIO API TO MAKE THE TOOL AVAILABLE REMOTELY AND ACCESSIBLE THROUGH WHATSAPP
+ 
 
 [//]: # "References below:-"
 
