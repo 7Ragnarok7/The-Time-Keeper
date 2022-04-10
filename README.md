@@ -122,6 +122,12 @@ $ ttk [--option(s)] [target]
  
  - [ ] ADD INTEGRATION OF TWILIO API TO MAKE THE TOOL AVAILABLE REMOTELY AND ACCESSIBLE THROUGH WHATSAPP
  
+### Reporting :-
+ - Report BUGS at [( https://github.com/7Ragnarok7/The-Time-Keeper/issues )](https://github.com/7Ragnarok7/The-Time-Keeper/issues)
+ - Reporting guide/template [can be found here.](https://github.com/7Ragnarok7/The-Time-Keeper/tree/main/.github/ISSUE_TEMPLATE)
+
+### Feedback :-
+ - Share your feedback and discuss about the project at [(https://github.com/7Ragnarok7/The-Time-Keeper/discussions/)](https://github.com/7Ragnarok7/The-Time-Keeper/discussions/)
 
 [//]: # "References below:-"
 
