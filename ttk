@@ -125,15 +125,27 @@ fi
 
 ############### SELECTING THE PAYLOAD PARAMETER #############
 
+contains() {
+    [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && echo 0 || echo 1
+}
+
 if (($len >= 2)); then
 	echo "Found more than one data parameteres."
-	echo -n "Choose any one ("
-	for i in ${params[@]}
+	while true
 	do
-		echo -n "$i, "
+		echo -n "Choose any one ("
+		for i in ${params[@]}
+		do
+			echo -n "$i, "
+		done
+		echo -n "): "
+		read param
+		if [[ " ${params[*]} " =~ " ${param} " ]]; then
+			break
+		fi
+		echo Invalid Input!
 	done
-	echo -n "): "
-	read params
+	params=$param
 fi
 
 ############# MODIFYING THE DATA #################
