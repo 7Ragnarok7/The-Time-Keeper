@@ -50,7 +50,7 @@ EOF
 ############## USAGE INSTRUCTIONS ##################
 
 print_usage() {
-  printf "
+  printf "\e[32m
 Usage:-
 
 ./ttk -u url -d data -w wordlist 
@@ -64,7 +64,9 @@ Optional flags :-
 -b (use this to run ttk in bruteforcing mode)
 -e error msg (*mandatory flag if using -b*, use this to provide an error msg) 
 
-"
+\e[34mFind complete guide to use this tool at: https://7ragnarok7.github.io/The-Time-Keeper/
+
+\e[0m"
 exit 1
 }
 
@@ -88,7 +90,7 @@ while getopts 'u:d:w:c:e:jsbh' flags; do
 done
 
 if ((test -z ${url+x} || test -z ${data+x} || test -z ${wordlist+x}) || (! test -z ${brute+x} && test -z ${error+x})); then
-	echo "Required arguments not supplied!"
+	echo -e "\e[31mRequired arguments not supplied!\e[0m"
 	print_usage
 fi
 
@@ -130,20 +132,20 @@ contains() {
 }
 
 if (($len >= 2)); then
-	echo "Found more than one data parameteres."
+	echo -e "\e[34mFound more than one data parameteres.\e[0m"
 	while true
 	do
-		echo -n "Choose any one ("
+		echo -ne "\e[1;33mChoose any one (\e[0m"
 		for i in ${params[@]}
 		do
-			echo -n "$i, "
+			echo -ne "\e[1;33m$i, \e[0m"
 		done
-		echo -n "): "
+		echo -ne "\e[1;33m): \e[0m"
 		read param
 		if [[ " ${params[*]} " =~ " ${param} " ]]; then
 			break
 		fi
-		echo Invalid Input!
+		echo -e "\e[31mInvalid Input!\e[0m"
 	done
 	params=$param
 fi
@@ -173,7 +175,7 @@ fi
 
 print() {
 	if (test -z $silent); then
-			echo "$word: $time1"s
+			echo -e "\e[37m$word: $time1\e[0m""\e[37ms\e[0m"
 	fi
 }
 
@@ -181,7 +183,7 @@ print() {
 
 testt() {
 	if (test -z $silent); then
-		echo -e "\n Testing the target url.....\n"
+		echo -e "\n \e[31mTesting the target url.....\e[0m\n"
 	fi
 	words=("ryu" "nina" "bow" "katt" "jean") # yes the names are a reference to BOF 2 :)
 	time=0
@@ -194,7 +196,7 @@ testt() {
 	done
 	time=$(bc -l <<<${time}/5)
 	if (test -z $silent); then
-		echo -e "\nAverage response time: $time"s
+		echo -e "\n\e[34mAverage response time: $time\e[0m""\e[34ms\e[0m"
 	fi
 }
 
@@ -203,10 +205,10 @@ testt() {
 threshold(){
 	time=$(bc -l <<<${time}*1.8)
 	if (test -z $silent); then
-		echo "Recommended threshold time: $time"s
-		read -p $'\x0aContinue with the recommended? (Y/n): ' choice
+		echo -e "\e[34mRecommended threshold time: $time\e[0m""\e[34ms\e[0m"
+		read -p $'\x0a\e[1;33mContinue with the recommended? (Y/n): \e[0m' choice
 		if [[ $choice == "n" || $choice == "N" ]]; then
-			read -p "Enter a new threshold value: " time
+			read -p $'\x0a\e[1;33mEnter a new threshold value: \e[0m' time
 		fi
 	fi
 }
@@ -230,16 +232,16 @@ main(){
 			print
 			if (( $(echo "$time1 > $time" | bc -l) )); then
 				if (test -z $silent); then
-					echo -e "\nProbable user found: $word\n"
+					echo -e "\n\e[32mProbable user found: $word\e[0m\n"
 				fi
 				results+=($word)
 			fi
 		else
 			if (test -z $silent); then
-				echo $word
+				echo -e "\e[32m$word\e[0m"
 			fi
 			if [[ ! $time1 == *$error* ]]; then
-				echo -e "\nPassword found: $word\n"
+				echo -e "\n\e[32mPassword found: $word\e[0m\n"
 				exit 1
 			fi
 		fi
@@ -247,17 +249,17 @@ main(){
 	
 	if (test -z $brute); then
 		if (! test -z "$results"); then
-			echo -en "\nThe following probable users found: ["
+			echo -en "\n\e[32mThe following probable users found: [\e[0m"
 			for i in ${results[@]}
 			do
-				echo -n "$i, "
+				echo -ne "\e[32m$i, \e[0m"
 			done
-			echo -e "] \n"
+			echo -e "\e[32m] \n\e[0m"
 		else
-			echo -e "\nNo users found!\n"
+			echo -e "\n\e[31mNo users found!\e[0m\n"
 		fi
 	else
-		echo -e "\nPassword not found!\n"
+		echo -e "\n\e[31mPassword not found!\e[0m\n"
 	fi
 }
 
