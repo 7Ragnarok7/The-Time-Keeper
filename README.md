@@ -100,7 +100,7 @@ $ ttk [--option(s)] [target]
 - Use the -h flag to display the help menu
 - Use the -u flag to provide the target url/api endpoint where the post requests are sent. Ex: -u https://abcd.com/api/login
 - Use the -d flag to provide the POST data. Ex: -d "username=7ragnarok7&password=abcd"
-- Use the -j flag when the data type will be of JSON type. Ex: -j -d -d '{"username": "anurag", "password": "abcd"}'
+- Use the -j flag when the data type will be of JSON type. Ex: -j -d '{"username": "anurag", "password": "abcd"}'
 - IMPORTANT: When the data will be of JSON type, both the keys and values must be provided as STRINGS for the tool to parse it correctly.
 - Submitting JSON DATA properly: -d ~~'{username: "anurag", password: "a"}'~~ (WRONG), -d '{"username": "anurag", "password": "abcd"}' (CORRECT)
 - Use the -w flag to provide a wordlist file to the tool. Ex: -w wordlist.txt
