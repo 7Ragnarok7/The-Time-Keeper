@@ -1,5 +1,5 @@
 # *The-Time-Keeper (TTK)* [![bash](https://img.shields.io/static/v1?label=Built+With&message=bash&color=brightgreen)](https://www.gnu.org/software/bash/)
-[![TTK-icon](https://github.com/7Ragnarok7/The-Time-Keeper/blob/main/image-src/ttk.png?raw=true)][page]
+[![TTK-icon](image-src/ttk.png)][page]
 
 ##### TTK is a ***Universal*** Timing Attack Initiator which also adds up as a ***Password Brute-Forcing/Fuzzing*** tool.
 
@@ -95,7 +95,7 @@ $ ./uninstall.sh
 ```sh
 $ ttk [--option(s)] [target]
 ```
- ![help-icon](https://github.com/7Ragnarok7/The-Time-Keeper/blob/main/image-src/help.png?raw=true)
+ ![help-icon](image-src/help.png)
 - By default, the tool will run in timing-attack mode.
 - Use the -h flag to display the help menu
 - Use the -u flag to provide the target url/api endpoint where the post requests are sent. Ex: -u https://abcd.com/api/login
